@@ -6,7 +6,7 @@ The XW-110 can be easily and quickly mounted to a wall or any other workable sur
 
 ![ScreenShot](https://raw.githubusercontent.com/optio50/XW-110-Plus-Wireless-Temperature-Sensor/main/ModBus-PYQT5-XW-110P.png?raw=true|alt=octocat)    
 ![ScreenShot](https://raw.githubusercontent.com/optio50/XW-110-Plus-Wireless-Temperature-Sensor/main/Modbus-XW-110P-CLI.png?raw=true|alt=octocat)    
-
+![ScreenShot](https://raw.githubusercontent.com/optio50/XW-110-Plus-Wireless-Temperature-Sensor/main/xw110-external-temp-sensor.jpg?raw=true|alt=octocat)
 
 to install    
 `pip install pymodbus`    
