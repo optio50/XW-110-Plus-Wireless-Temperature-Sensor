@@ -1,3 +1,8 @@
+https://www.controlbyweb.com/xw110/
+The XW-110 is an easy-to-use wireless temperature sensor with a built-in web server.    
+Users can view current temperature using a web browser, smartphone app, or the XW-110 can send temperature information via email.    
+The XW-110 can be easily and quickly mounted to a wall or any other workable surface. 
+
 ![ScreenShot](https://raw.githubusercontent.com/optio50/XW-110-Plus-Wireless-Temperature-Sensor/main/ModBus-PYQT5-XW-110P.png?raw=true|alt=octocat)    
 ![ScreenShot](https://raw.githubusercontent.com/optio50/XW-110-Plus-Wireless-Temperature-Sensor/main/Modbus-XW-110P-CLI.png?raw=true|alt=octocat)    
 
