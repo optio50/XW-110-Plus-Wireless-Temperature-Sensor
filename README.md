@@ -1,4 +1,8 @@
 A simple PYQT5 interface with a 7 day live chart and current readout for the XW-110 wireless temperature sensors.    
+Uses ModBusTCP for communication the the sensors.
+Chart and readout are updated every 5 seconds. Chart will hold 7 days of data.    
+It has no ability to hold values after closing. Data is held only when running.
+
 
 https://www.controlbyweb.com/xw110/    
 The XW-110 is an easy-to-use wireless temperature sensor with a built-in web server.    
