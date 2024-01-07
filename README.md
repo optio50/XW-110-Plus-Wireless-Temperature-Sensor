@@ -1,3 +1,5 @@
+A simple PYQT5 interface with a 7 day live chart and current readout for the XW-110 wireless temperature sensors.    
+
 https://www.controlbyweb.com/xw110/    
 The XW-110 is an easy-to-use wireless temperature sensor with a built-in web server.    
 Users can view current temperature using a web browser, smartphone app,    
