@@ -39,8 +39,8 @@ Right Click "View All"
 Click the lower left corner "A" to auto scale after zooming or panning.
 '''
 
-def modbus_register(address, units):
-    msg     = client.read_holding_registers(address, units)
+def modbus_register(address, slave):
+    msg     = client.read_holding_registers(address, slave=slave)
     decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, Endian.BIG)
     msg     = decoder.decode_32bit_float()
     return msg
