@@ -29,8 +29,8 @@ Spacer     = "\n" * 10
 ip = '192.168.20.2'
 client = ModbusClient(ip, port='502')
 
-def modbus_register(address, units):
-    msg     = client.read_holding_registers(address, units)
+def modbus_register(address, slave):
+    msg     = client.read_holding_registers(address, slave=slave)
     decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, Endian.BIG)
     msg     = decoder.decode_32bit_float()
     return msg
