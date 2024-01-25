@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # Modbus
-from pymodbus.constants import Defaults
 from pymodbus.constants import Endian
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+from pymodbus.client import ModbusTcpClient as ModbusClient
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.payload import BinaryPayloadBuilder
 # XW-110 Plus Webrelay Wireless Temperature Monitoring System
@@ -32,7 +31,7 @@ client = ModbusClient(ip, port='502')
 
 def modbus_register(address, units):
     msg     = client.read_holding_registers(address, units)
-    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, Endian.Big)
+    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, Endian.BIG)
     msg     = decoder.decode_32bit_float()
     return msg
 
