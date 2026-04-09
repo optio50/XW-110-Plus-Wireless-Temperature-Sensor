@@ -27,7 +27,7 @@ Green      = '\033[38;5;34m'
 DarkOrange = '\033[38;5;208m'
 Reset      = '\033[0m'
 
-REFRESH_INTERVAL = 5  # seconds between updates
+REFRESH_INTERVAL = 15  # seconds between updates
 
 # Sensor display names
 SENSOR1_NAME = "First Floor"
@@ -36,9 +36,8 @@ SENSOR3_NAME = "Exterior"
 COL_WIDTH    = max(len(SENSOR1_NAME), len(SENSOR2_NAME), len(SENSOR3_NAME), len("BatteryVoltage"))
 
 ip = '192.168.20.2'
-client = ModbusClient(ip, port='502')
 
-def modbus_register(address, slave):
+def modbus_register(client, address, slave):
     msg = client.read_holding_registers(address, count=2, device_id=slave)
     msg = struct.unpack(">f", struct.pack(">HH", *msg.registers))[0]
     return msg
@@ -67,10 +66,15 @@ try:
     while True:
         print("\033[0;0f")  # Move cursor to row 0, col 0 (home)
         try:
-            BatteryVoltage = modbus_register(16, 2)
-            Sensor1        = modbus_register(272, 2)
-            Sensor2        = modbus_register(274, 2)
-            Sensor3        = modbus_register(276, 2)
+            client = ModbusClient(ip, port='502')
+            client.connect()
+            try:
+                BatteryVoltage = modbus_register(client, 16, 2)
+                Sensor1        = modbus_register(client, 272, 2)
+                Sensor2        = modbus_register(client, 274, 2)
+                Sensor3        = modbus_register(client, 276, 2)
+            finally:
+                client.close()
             arr1 = arrow(Sensor1, prev1, arr1)
             arr2 = arrow(Sensor2, prev2, arr2)
             arr3 = arrow(Sensor3, prev3, arr3)
