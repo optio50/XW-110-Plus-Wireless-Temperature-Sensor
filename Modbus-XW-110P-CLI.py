@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
+import struct
 # Modbus
-from pymodbus.constants import Endian
 from pymodbus.client import ModbusTcpClient as ModbusClient
-from pymodbus.payload import BinaryPayloadDecoder
-from pymodbus.payload import BinaryPayloadBuilder
 # XW-110 Plus Webrelay Wireless Temperature Monitoring System
 # https://www.controlbyweb.com/xw110/
 '''
@@ -30,9 +28,8 @@ ip = '192.168.20.2'
 client = ModbusClient(ip, port='502')
 
 def modbus_register(address, slave):
-    msg     = client.read_holding_registers(address, count=2, slave=slave)
-    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, Endian.BIG)
-    msg     = decoder.decode_32bit_float()
+    msg     = client.read_holding_registers(address, count=2, device_id=slave)
+    msg     = struct.unpack(">f", struct.pack(">HH", *msg.registers))[0]
     return msg
 
 
