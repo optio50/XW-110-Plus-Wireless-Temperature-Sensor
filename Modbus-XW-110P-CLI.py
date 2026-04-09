@@ -38,6 +38,17 @@ print("\033[H\033[J")       # Clear screen once at startup
 print('\033[?25l', end="")  # Hide blinking cursor
 clear = "\033[K\033[1K"     # Eliminates screen flashing / blink during refresh
 
+def arrow(current, previous):
+    if previous is None:
+        return " "
+    if current > previous:
+        return "↑"
+    if current < previous:
+        return "↓"
+    return " "
+
+prev1 = prev2 = prev3 = None
+
 while True:
     print("\033[0;0f")  # Move cursor to row 0, col 0 (home)
     try:
@@ -45,11 +56,12 @@ while True:
         Sensor1        = modbus_register(272, 2)
         Sensor2        = modbus_register(274, 2)
         Sensor3        = modbus_register(276, 2)
-        print(clear, f"  {Red}Sensor1 Temperature ......{Sensor1: .2f} °F{Reset}", sep="")
-        print(clear, f"  {Blue}Sensor2 Temperature ......{Sensor2: .2f} °F{Reset}", sep="")
-        print(clear, f"  {Green}Sensor3 Temperature ......{Sensor3: .2f} °F{Reset}", sep="")
+        print(clear, f"  {Red}Sensor1 Temperature ......{Sensor1: .2f} °F {arrow(Sensor1, prev1)}{Reset}", sep="")
+        print(clear, f"  {Blue}Sensor2 Temperature ......{Sensor2: .2f} °F {arrow(Sensor2, prev2)}{Reset}", sep="")
+        print(clear, f"  {Green}Sensor3 Temperature ......{Sensor3: .2f} °F {arrow(Sensor3, prev3)}{Reset}", sep="")
         print(clear, f"  {DarkOrange}BatteryVoltage ...........{BatteryVoltage: .2f} Volts{Reset}", sep="")
         print(clear, f"  Last updated: {time.strftime('%a %d %b %Y  %I:%M:%S %p')}   (every {REFRESH_INTERVAL}s)", sep="")
+        prev1, prev2, prev3 = Sensor1, Sensor2, Sensor3
     except Exception as e:
         print(clear, f"  Connection error: {e}", sep="")
     time.sleep(REFRESH_INTERVAL)
