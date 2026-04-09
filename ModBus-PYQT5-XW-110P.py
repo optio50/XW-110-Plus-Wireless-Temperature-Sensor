@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import signal
 from threading import Thread
 
@@ -8,6 +8,7 @@ from PyQt5.QtCore import QTime, QTimer, QProcess, Qt, QObject, QThread
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import QColor, QIcon
 
+import struct
 from time import sleep
 import time
 from datetime import datetime
@@ -23,14 +24,16 @@ from pglive.sources.live_axis_range import LiveAxisRange
 from pglive.sources.live_plot_widget import LivePlotWidget
 
 # Modbus
-from pymodbus.constants import Endian
 from pymodbus.client import ModbusTcpClient as ModbusClient
-from pymodbus.payload import BinaryPayloadDecoder
-from pymodbus.payload import BinaryPayloadBuilder
 
 # IP Address of XW-110P
 ip = '192.168.20.2'
 client = ModbusClient(ip, port='502')
+
+# Sensor display names
+SENSOR1_NAME = "First Floor"
+SENSOR2_NAME = "Second Floor"
+SENSOR3_NAME = "Exterior"
 
 '''
 Right Click drag (left right up down) to zoom in and out for the axis of choice
@@ -40,9 +43,8 @@ Click the lower left corner "A" to auto scale after zooming or panning.
 '''
 
 def modbus_register(address, slave):
-    msg     = client.read_holding_registers(address, count=2, slave=slave)
-    decoder = BinaryPayloadDecoder.fromRegisters(msg.registers, Endian.BIG)
-    msg     = decoder.decode_32bit_float()
+    msg     = client.read_holding_registers(address, count=2, device_id=slave)
+    msg     = struct.unpack(">f", struct.pack(">HH", *msg.registers))[0]
     return msg
 
 
@@ -51,6 +53,9 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         # Load the ui file
         uic.loadUi("ModBus-PYQT5-XW-110P.ui", self)
+        self.Sensor1_label.setText(SENSOR1_NAME)
+        self.Sensor2_label.setText(SENSOR2_NAME)
+        self.Sensor3_label.setText(SENSOR3_NAME)
         icon = QIcon("skin.png")
         self.setWindowIcon(QtGui.QIcon(icon))
 
@@ -67,9 +72,9 @@ class MainWindow(QMainWindow):
         pg.setConfigOption('background', "black")
 
         # Chart Solar Volts
-        Sensor1_plot  = LiveLinePlot(pen="red",   name="Sensor1")
-        Sensor2_plot  = LiveLinePlot(pen="blue",  name="Sensor2")
-        Sensor3_plot  = LiveLinePlot(pen="green", name="Sensor3")
+        Sensor1_plot  = LiveLinePlot(pen="red",   name=SENSOR1_NAME)
+        Sensor2_plot  = LiveLinePlot(pen="blue",  name=SENSOR2_NAME)
+        Sensor3_plot  = LiveLinePlot(pen="green", name=SENSOR3_NAME)
 
         # Data connectors for each plot with dequeue of max_points points
         self.Sensor1_connector = DataConnector(Sensor1_plot, max_points=86400, update_rate=.4)
