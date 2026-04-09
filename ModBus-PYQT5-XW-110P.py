@@ -1,4 +1,22 @@
 #!/usr/bin/env python3
+# XW-110 Plus Wireless Temperature Sensor — PyQt5 GUI
+# https://www.controlbyweb.com/xw110/
+'''
+To set up (recommended: use a virtual environment):
+  python3 -m venv XW110
+  source XW110/bin/activate
+  pip install pymodbus
+  pip install pglive
+
+PyQt5 is also required. Install via your distro package manager:
+  sudo apt install python3-pyqt5
+Or inside the venv:
+  pip install PyQt5
+
+Run with venv active:
+  source XW110/bin/activate
+  ./ModBus-PYQT5-XW-110P.py
+'''
 import signal
 from threading import Thread
 
