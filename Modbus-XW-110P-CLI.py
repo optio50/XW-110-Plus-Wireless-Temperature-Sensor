@@ -40,6 +40,10 @@ def modbus_register(address, slave):
     msg = struct.unpack(">f", struct.pack(">HH", *msg.registers))[0]
     return msg
 
+def label(name):
+    # One space after name, then dots — all ending at the same column
+    return name + " " + "." * (COL_WIDTH - len(name) + 3)
+
 print("\033[H\033[J")       # Clear screen once at startup
 print('\033[?25l', end="")  # Hide blinking cursor
 clear = "\033[K\033[1K"     # Eliminates screen flashing / blink during refresh
@@ -63,10 +67,10 @@ try:
             Sensor1        = modbus_register(272, 2)
             Sensor2        = modbus_register(274, 2)
             Sensor3        = modbus_register(276, 2)
-            print(clear, f"  {Red}{SENSOR1_NAME:<{COL_WIDTH}} .....{Sensor1:7.2f} °F {arrow(Sensor1, prev1)}{Reset}", sep="")
-            print(clear, f"  {Blue}{SENSOR2_NAME:<{COL_WIDTH}} .....{Sensor2:7.2f} °F {arrow(Sensor2, prev2)}{Reset}", sep="")
-            print(clear, f"  {Green}{SENSOR3_NAME:<{COL_WIDTH}} .....{Sensor3:7.2f} °F {arrow(Sensor3, prev3)}{Reset}", sep="")
-            print(clear, f"  {DarkOrange}{'BatteryVoltage':<{COL_WIDTH}} .....{BatteryVoltage:7.2f} Volts{Reset}", sep="")
+            print(clear, f"  {Red}{label(SENSOR1_NAME)}{Sensor1:7.2f} °F {arrow(Sensor1, prev1)}{Reset}", sep="")
+            print(clear, f"  {Blue}{label(SENSOR2_NAME)}{Sensor2:7.2f} °F {arrow(Sensor2, prev2)}{Reset}", sep="")
+            print(clear, f"  {Green}{label(SENSOR3_NAME)}{Sensor3:7.2f} °F {arrow(Sensor3, prev3)}{Reset}", sep="")
+            print(clear, f"  {DarkOrange}{label('BatteryVoltage')}{BatteryVoltage:7.2f} Volts{Reset}", sep="")
             print(clear, f"  Last updated: {time.strftime('%a %d %b %Y  %I:%M:%S %p')}   (every {REFRESH_INTERVAL}s)", sep="")
             prev1, prev2, prev3 = Sensor1, Sensor2, Sensor3
         except Exception as e:
