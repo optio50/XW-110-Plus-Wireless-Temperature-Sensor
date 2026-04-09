@@ -48,16 +48,17 @@ print("\033[H\033[J")       # Clear screen once at startup
 print('\033[?25l', end="")  # Hide blinking cursor
 clear = "\033[K\033[1K"     # Eliminates screen flashing / blink during refresh
 
-def arrow(current, previous):
+def arrow(current, previous, last):
     if previous is None:
         return " "
     if current > previous:
         return "↑"
     if current < previous:
         return "↓"
-    return " "
+    return last  # unchanged — keep showing last direction
 
 prev1 = prev2 = prev3 = None
+arr1  = arr2  = arr3  = " "
 
 try:
     while True:
@@ -67,9 +68,12 @@ try:
             Sensor1        = modbus_register(272, 2)
             Sensor2        = modbus_register(274, 2)
             Sensor3        = modbus_register(276, 2)
-            print(clear, f"  {Red}{label(SENSOR1_NAME)}{Sensor1:7.2f} °F {arrow(Sensor1, prev1)}{Reset}", sep="")
-            print(clear, f"  {Blue}{label(SENSOR2_NAME)}{Sensor2:7.2f} °F {arrow(Sensor2, prev2)}{Reset}", sep="")
-            print(clear, f"  {Green}{label(SENSOR3_NAME)}{Sensor3:7.2f} °F {arrow(Sensor3, prev3)}{Reset}", sep="")
+            arr1 = arrow(Sensor1, prev1, arr1)
+            arr2 = arrow(Sensor2, prev2, arr2)
+            arr3 = arrow(Sensor3, prev3, arr3)
+            print(clear, f"  {Red}{label(SENSOR1_NAME)}{Sensor1:7.2f} °F {arr1}{Reset}", sep="")
+            print(clear, f"  {Blue}{label(SENSOR2_NAME)}{Sensor2:7.2f} °F {arr2}{Reset}", sep="")
+            print(clear, f"  {Green}{label(SENSOR3_NAME)}{Sensor3:7.2f} °F {arr3}{Reset}", sep="")
             print(clear, f"  {DarkOrange}{label('BatteryVoltage')}{BatteryVoltage:7.2f} Volts{Reset}", sep="")
             print(clear, f"  Last updated: {time.strftime('%a %d %b %Y  %I:%M:%S %p')}   (every {REFRESH_INTERVAL}s)", sep="")
             prev1, prev2, prev3 = Sensor1, Sensor2, Sensor3
