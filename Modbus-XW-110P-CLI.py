@@ -6,7 +6,10 @@ from pymodbus.client import ModbusTcpClient as ModbusClient
 # XW-110 Plus Webrelay Wireless Temperature Monitoring System
 # https://www.controlbyweb.com/xw110/
 '''
-To set up: pip install pymodbus
+To set up (recommended: use a virtual environment):
+  python3 -m venv XW110
+  source XW110/bin/activate
+  pip install pymodbus
 
 In Modbus communication, registers store 16-bit data.
 The value 2 indicates that the code attempts to read two registers
