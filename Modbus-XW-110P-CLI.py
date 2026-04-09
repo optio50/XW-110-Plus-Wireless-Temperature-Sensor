@@ -34,35 +34,22 @@ def modbus_register(address, slave):
     msg = struct.unpack(">f", struct.pack(">HH", *msg.registers))[0]
     return msg
 
-# Lines printed per cycle — must match exactly for flicker-free cursor repositioning
-OUTPUT_LINES = 6
+print("\033[H\033[J")       # Clear screen once at startup
+print('\033[?25l', end="")  # Hide blinking cursor
+clear = "\033[K\033[1K"     # Eliminates screen flashing / blink during refresh
 
-def print_readings():
+while True:
+    print("\033[0;0f")  # Move cursor to row 0, col 0 (home)
     try:
         BatteryVoltage = modbus_register(16, 2)
         Sensor1        = modbus_register(272, 2)
         Sensor2        = modbus_register(274, 2)
         Sensor3        = modbus_register(276, 2)
-        print(f"  {Red}Sensor1 Temperature ......{Sensor1: .2f} °F{Reset}     ")
-        print(f"  {Blue}Sensor2 Temperature ......{Sensor2: .2f} °F{Reset}     ")
-        print(f"  {Green}Sensor3 Temperature ......{Sensor3: .2f} °F{Reset}     ")
-        print(f"  {DarkOrange}BatteryVoltage ...........{BatteryVoltage: .2f} Volts{Reset}  ")
-        print(f"  Last updated: {time.strftime('%a %d %b %Y  %I:%M:%S %p')}   (every {REFRESH_INTERVAL}s)")
-        print()
+        print(clear, f"  {Red}Sensor1 Temperature ......{Sensor1: .2f} °F{Reset}", sep="")
+        print(clear, f"  {Blue}Sensor2 Temperature ......{Sensor2: .2f} °F{Reset}", sep="")
+        print(clear, f"  {Green}Sensor3 Temperature ......{Sensor3: .2f} °F{Reset}", sep="")
+        print(clear, f"  {DarkOrange}BatteryVoltage ...........{BatteryVoltage: .2f} Volts{Reset}", sep="")
+        print(clear, f"  Last updated: {time.strftime('%a %d %b %Y  %I:%M:%S %p')}   (every {REFRESH_INTERVAL}s)", sep="")
     except Exception as e:
-        print(f"  Connection error: {e}                    ")
-        print()
-        print()
-        print()
-        print()
-        print()
-
-print()  # top spacer — printed once, never overwritten
-first = True
-while True:
-    if not first:
-        # Move cursor up OUTPUT_LINES lines and overwrite in place — no flicker
-        print(f"\033[{OUTPUT_LINES}A", end="", flush=True)
-    print_readings()
-    first = False
+        print(clear, f"  Connection error: {e}", sep="")
     time.sleep(REFRESH_INTERVAL)
